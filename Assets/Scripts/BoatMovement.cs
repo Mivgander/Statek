@@ -1,10 +1,11 @@
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 
 public class BoatMovement : MonoBehaviour
 {
     [SerializeField] private float movementSpeed = 10f;
     [SerializeField] private float rotationSpeed = 100f;
+
+    [SerializeField] private SailMovement sail;
 
     private InputActions inputActions;
     private Vector2 moveInput;
@@ -29,7 +30,7 @@ public class BoatMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float translation = movementSpeed * Time.fixedDeltaTime;
+        float translation = movementSpeed * sail.currentSailSpeedModifier * sail.currentWindSpeedModifier * Time.fixedDeltaTime;
         transform.Translate(translation, 0, 0);
 
         float rotation = moveInput.x * rotationSpeed * Time.fixedDeltaTime;
