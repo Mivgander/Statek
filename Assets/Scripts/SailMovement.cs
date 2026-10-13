@@ -81,7 +81,6 @@ public class SailMovement : MonoBehaviour
 
     private void Update()
     {
-        UpdateSailStatus();
         UpdateClothPosition();
         UpdateWindSpeedModifier();
         UpdateSailSpeedModifier();
@@ -149,7 +148,8 @@ public class SailMovement : MonoBehaviour
         objectToMove.localPosition = new Vector3(objectToMove.localPosition.x, currentYPosition, objectToMove.localPosition.z);
         if (positionChange != 0)
         {
-            GlobalEvents.SailHeightChange(currentYPosition);
+            UpdateSailStatus();
+            GlobalEvents.SailHeightChange(currentSailStatus01);
         }
 
         float rotationChange = moveInput.x * rotationSpeed * Time.fixedDeltaTime;

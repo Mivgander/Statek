@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:GroupBox style="top: 0; left: 0; bottom: auto; right: auto; flex-direction: row; flex-wrap: nowrap; flex-basis: auto; align-items: stretch; justify-content: flex-start; align-self: flex-start; width: 400px;">
+        <ui:VisualElement name="SailOpenPanel" style="flex-grow: 1; width: 150px; height: 200px; align-items: stretch;">
+            <ui:Label text="Sail Open" enable-rich-text="true" name="TextTitle" style="position: relative; top: 0; left: 0; right: auto; bottom: auto; font-size: 30px; -unity-text-align: middle-center; width: 200px;"/>
+            <ui:Label text="100%" enable-rich-text="true" name="SailOpenTextValue" style="position: relative; top: 0; left: 0; right: auto; bottom: auto; font-size: 30px; -unity-text-align: middle-center; width: 200px;"/>
+        </ui:VisualElement>
+        <ui:VisualElement name="SailRotationPanel" style="flex-grow: 1; width: 150px; height: 200px; align-items: stretch;">
+            <ui:Label text="Sail Rotation" enable-rich-text="true" name="TextTitle" style="position: relative; top: 0; left: 0; right: auto; bottom: auto; font-size: 30px; -unity-text-align: middle-center; width: 200px;"/>
+            <ui:Label text="0°" enable-rich-text="true" name="SailRotationTextValue" style="position: relative; top: 0; left: 0; right: auto; bottom: auto; font-size: 30px; -unity-text-align: middle-center; width: 200px;"/>
+        </ui:VisualElement>
+    </ui:GroupBox>
+</ui:UXML>
