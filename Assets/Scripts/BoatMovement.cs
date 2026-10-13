@@ -2,14 +2,20 @@ using UnityEngine;
 
 public class BoatMovement : MonoBehaviour
 {
-    [SerializeField] private float movementSpeed = 10f;
+    [Header("Movement Modifiers")]
+    [SerializeField] private float maxMovementSpeed = 10f;
+    [SerializeField] private float movementSpeedChangeMultiplier = 0.2f;
+    [Header("Rotation Modifiers")]
     [SerializeField] private float maxRotationSpeed = 50f;
     [SerializeField] private float minRotationSpeed = -50f;
     [SerializeField] private float rotationChangeSpeedMultiplier = 0.2f;
+    [Header("Referances")]
     [SerializeField] private SailMovement sail;
 
     private InputActions inputActions;
     private Vector2 moveInput;
+    private float currentMaxMovementSpeed = 0f;
+    private float currentMovementSpeed = 0f;
     private float currentRotationSpeed = 0f;
 
     private void Awake()
@@ -32,9 +38,35 @@ public class BoatMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        float translation = movementSpeed * sail.currentSailSpeedModifier * sail.currentWindSpeedModifier * Time.fixedDeltaTime;
-        transform.Translate(translation, 0, 0);
+        UpdatePosition();
+        UpdateRotation();
+    }
 
+    private void UpdatePosition()
+    {
+        currentMaxMovementSpeed = maxMovementSpeed * sail.currentSailSpeedModifier * sail.currentWindSpeedModifier;
+        if (currentMaxMovementSpeed > currentMovementSpeed)
+        {
+            currentMovementSpeed += movementSpeedChangeMultiplier;
+            if (currentMovementSpeed > currentMaxMovementSpeed)
+            {
+                currentMovementSpeed = currentMaxMovementSpeed;
+            }
+        }
+        else if (currentMaxMovementSpeed < currentMovementSpeed)
+        {
+            currentMovementSpeed -= movementSpeedChangeMultiplier;
+            if (currentMovementSpeed < currentMaxMovementSpeed)
+            {
+                currentMovementSpeed = currentMaxMovementSpeed;
+            }
+        }
+        float translation = currentMovementSpeed * Time.fixedDeltaTime;
+        transform.Translate(translation, 0, 0);
+    }
+
+    private void UpdateRotation()
+    {
         currentRotationSpeed += moveInput.x * rotationChangeSpeedMultiplier;
         if (currentRotationSpeed > maxRotationSpeed)
         {
@@ -44,6 +76,7 @@ public class BoatMovement : MonoBehaviour
         {
             currentRotationSpeed = minRotationSpeed;
         }
+
         float rotation = currentRotationSpeed * Time.fixedDeltaTime;
         transform.Rotate(0, rotation, 0);
     }

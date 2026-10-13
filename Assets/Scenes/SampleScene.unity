@@ -1447,7 +1447,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d09080af584166468d5ec75cb06244a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatMovement
-  movementSpeed: 10
+  maxMovementSpeed: 10
+  movementSpeedChangeMultiplier: 0.03
   maxRotationSpeed: 30
   minRotationSpeed: -30
   rotationChangeSpeedMultiplier: 0.3

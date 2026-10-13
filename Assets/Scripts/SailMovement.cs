@@ -126,8 +126,6 @@ public class SailMovement : MonoBehaviour
                 break;
             }
         }
-        Debug.Log(currentDot);
-        Debug.Log(currentWindSpeedModifier);
     }
 
     private float GetWindDot()
