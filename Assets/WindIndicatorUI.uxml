@@ -1,0 +1,3 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:Image source="project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=-4528830608231651361&amp;guid=e853472be859664448c504d33f741361&amp;type=3#arrow-up@2x" tint-color="rgba(255, 255, 255, 0.16)" style="width: 100%; height: 100%;"/>
+</ui:UXML>

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
@@ -119,12 +120,14 @@ public class SailMovement : MonoBehaviour
         float currentDot = GetWindDot();
         foreach (WindModifierCondition windCondition in windBoosts)
         {
-            if (currentDot <= windCondition.windCondition)
+            if (currentDot >= windCondition.windCondition)
             {
                 currentWindSpeedModifier = windCondition.speedModifier;
                 break;
             }
         }
+        Debug.Log(currentDot);
+        Debug.Log(currentWindSpeedModifier);
     }
 
     private float GetWindDot()
@@ -133,7 +136,7 @@ public class SailMovement : MonoBehaviour
         Vector3 target = new Vector3(
             transform.position.x + WindManager.Instance.windDirection.x,
             transform.position.y,
-            transform.position.z + WindManager.Instance.windDirection.y
+            transform.position.z + WindManager.Instance.windDirection.z
         );
         Vector3 toOther = Vector3.Normalize(target - transform.position);
 
