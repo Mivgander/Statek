@@ -28,6 +28,10 @@ public class SailMovement : MonoBehaviour
     [SerializeField] private float maxAngle = 45f;
 
     [Header("Sail Movement")]
+    [SerializeField] private Transform cloth;
+    [SerializeField] private float maxClothXScale = 0.4f;
+    [SerializeField] private float minClothXScale = 0.07f;
+    [SerializeField] private Transform upperLog;
     [SerializeField] private Transform objectToMove;
     [SerializeField] private float movementSpeed = 3f;
     [SerializeField] private float maxHeight = 6.8f;
@@ -44,6 +48,7 @@ public class SailMovement : MonoBehaviour
     private Vector2 moveInput;
     private float currentYRotation = 0f;
     private float currentYPosition = 0f;
+    private float currentSailStatus01 = 1;
 
     private void Awake()
     {
@@ -76,15 +81,30 @@ public class SailMovement : MonoBehaviour
 
     private void Update()
     {
+        UpdateSailStatus();
+        UpdateClothPosition();
         UpdateWindSpeedModifier();
         UpdateSailSpeedModifier();
     }
 
-    private void UpdateSailSpeedModifier()
+    private void UpdateSailStatus()
     {
         float availableDistance = maxHeight - minHeight;
         float currentDistance = maxHeight - currentYPosition;
-        float currentSailStatus01 = currentDistance / availableDistance;
+        currentSailStatus01 = currentDistance / availableDistance;
+    }
+
+    private void UpdateClothPosition()
+    {
+        float newClothYPosition = (upperLog.localPosition.y + currentYPosition) / 2;
+        cloth.localPosition = new Vector3(cloth.localPosition.x, newClothYPosition, cloth.localPosition.z);
+        
+        float newClothXSclale = Mathf.Lerp(minClothXScale, maxClothXScale, currentSailStatus01);
+        cloth.localScale = new Vector3(newClothXSclale, cloth.localScale.y, cloth.localScale.z);
+    }
+
+    private void UpdateSailSpeedModifier()
+    {
         foreach (SailModifierCondition sailCondition in sailBoosts)
         {
             if (currentSailStatus01 <= sailCondition.sailDropValue)
@@ -123,12 +143,22 @@ public class SailMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        currentYPosition += moveInput.y * movementSpeed * Time.fixedDeltaTime;
+        float positionChange = moveInput.y * movementSpeed * Time.fixedDeltaTime;
+        currentYPosition += positionChange;
         currentYPosition = Mathf.Clamp(currentYPosition, minHeight, maxHeight);
         objectToMove.localPosition = new Vector3(objectToMove.localPosition.x, currentYPosition, objectToMove.localPosition.z);
+        if (positionChange != 0)
+        {
+            GlobalEvents.SailHeightChange(currentYPosition);
+        }
 
-        currentYRotation += moveInput.x * rotationSpeed * Time.fixedDeltaTime;
+        float rotationChange = moveInput.x * rotationSpeed * Time.fixedDeltaTime;
+        currentYRotation += rotationChange;
         currentYRotation = Mathf.Clamp(currentYRotation, minAngle, maxAngle);
         transform.localRotation = Quaternion.Euler(transform.localEulerAngles.x, currentYRotation, transform.localEulerAngles.z);
+        if (rotationChange != 0)
+        {
+            GlobalEvents.SailRotationChange(currentYRotation);
+        }
     }
 }
