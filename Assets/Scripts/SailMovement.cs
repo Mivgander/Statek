@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [Serializable]
-public struct WindModifierCondition
+public struct WindConditionModifier
 {
     [Range(-1f, 1f)]
     public float windCondition;
@@ -13,7 +12,7 @@ public struct WindModifierCondition
 }
 
 [Serializable]
-public struct SailModifierCondition
+public struct SailConditionModifier
 {
     [Range(0f, 1f)]
     public float sailDropValue;
@@ -32,15 +31,19 @@ public class SailMovement : MonoBehaviour
     [SerializeField] private Transform cloth;
     [SerializeField] private float maxClothXScale = 0.4f;
     [SerializeField] private float minClothXScale = 0.07f;
+    
+    [Header("Referances")]
     [SerializeField] private Transform upperLog;
-    [SerializeField] private Transform objectToMove;
+
+    [Header("Lower Log Movement")]
+    [SerializeField] private Transform lowerLog;
     [SerializeField] private float movementSpeed = 3f;
     [SerializeField] private float maxHeight = 6.8f;
     [SerializeField] private float minHeight = 3.4f;
 
     [Header("Boat Speed Modifiers")]
-    [SerializeField] private List<WindModifierCondition> windBoosts = new List<WindModifierCondition>();
-    [SerializeField] private List<SailModifierCondition> sailBoosts = new List<SailModifierCondition>();
+    [SerializeField] private List<WindConditionModifier> windBoosts = new List<WindConditionModifier>();
+    [SerializeField] private List<SailConditionModifier> sailBoosts = new List<SailConditionModifier>();
 
     public float currentWindSpeedModifier { get; private set; } = 1f;
     public float currentSailSpeedModifier { get; private set; } = 1f;
@@ -77,7 +80,7 @@ public class SailMovement : MonoBehaviour
             currentYRotation -= 360f;
         }
 
-        currentYPosition = objectToMove.localPosition.y;
+        currentYPosition = lowerLog.localPosition.y;
     }
 
     private void Update()
@@ -85,6 +88,12 @@ public class SailMovement : MonoBehaviour
         UpdateClothPosition();
         UpdateWindSpeedModifier();
         UpdateSailSpeedModifier();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdatePosition();
+        UpdateRotation();
     }
 
     private void UpdateSailStatus()
@@ -105,7 +114,7 @@ public class SailMovement : MonoBehaviour
 
     private void UpdateSailSpeedModifier()
     {
-        foreach (SailModifierCondition sailCondition in sailBoosts)
+        foreach (SailConditionModifier sailCondition in sailBoosts)
         {
             if (currentSailStatus01 <= sailCondition.sailDropValue)
             {
@@ -118,7 +127,7 @@ public class SailMovement : MonoBehaviour
     private void UpdateWindSpeedModifier()
     {
         float currentDot = GetWindDot();
-        foreach (WindModifierCondition windCondition in windBoosts)
+        foreach (WindConditionModifier windCondition in windBoosts)
         {
             if (currentDot >= windCondition.windCondition)
             {
@@ -141,18 +150,8 @@ public class SailMovement : MonoBehaviour
         return Vector3.Dot(forward, toOther);
     }
 
-    private void FixedUpdate()
+    private void UpdateRotation()
     {
-        float positionChange = moveInput.y * movementSpeed * Time.fixedDeltaTime;
-        currentYPosition += positionChange;
-        currentYPosition = Mathf.Clamp(currentYPosition, minHeight, maxHeight);
-        objectToMove.localPosition = new Vector3(objectToMove.localPosition.x, currentYPosition, objectToMove.localPosition.z);
-        if (positionChange != 0)
-        {
-            UpdateSailStatus();
-            GlobalEvents.SailHeightChange(currentSailStatus01);
-        }
-
         float rotationChange = moveInput.x * rotationSpeed * Time.fixedDeltaTime;
         currentYRotation += rotationChange;
         currentYRotation = Mathf.Clamp(currentYRotation, minAngle, maxAngle);
@@ -160,6 +159,19 @@ public class SailMovement : MonoBehaviour
         if (rotationChange != 0)
         {
             GlobalEvents.SailRotationChange(currentYRotation);
+        }
+    }
+
+    private void UpdatePosition()
+    {
+        float positionChange = moveInput.y * movementSpeed * Time.fixedDeltaTime;
+        currentYPosition += positionChange;
+        currentYPosition = Mathf.Clamp(currentYPosition, minHeight, maxHeight);
+        lowerLog.localPosition = new Vector3(lowerLog.localPosition.x, currentYPosition, lowerLog.localPosition.z);
+        if (positionChange != 0)
+        {
+            UpdateSailStatus();
+            GlobalEvents.SailHeightChange(currentSailStatus01);
         }
     }
 }
