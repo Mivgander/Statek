@@ -27,35 +27,23 @@ public class BoatMovement : MonoBehaviour
     [SerializeField]
     private MastManager _mast;
 
-    private InputActions _inputActions;
-    private Vector2 _moveInput;
+    private BoatInput _input;
+
     private float _currentMaxMovementSpeed;
     private float _currentMovementSpeed;
     private float _currentRotationSpeed;
 
+    private void Reset()
+    {
+        _input = GetComponentInParent<BoatInput>();
+    }
+
     private void Awake()
     {
-        _inputActions = new();
-
-        _inputActions.Player.SteerBoat.performed +=
-            ctx => _moveInput = ctx.ReadValue<Vector2>();
-        _inputActions.Player.SteerBoat.canceled +=
-            ctx => _moveInput = Vector2.zero;
-    }
-
-    private void OnEnable()
-    {
-        _inputActions.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _inputActions.Player.Disable();
-    }
-
-    private void OnDestroy()
-    {
-        _inputActions.Dispose();
+        if (_input == null)
+        {
+            _input = GetComponentInParent<BoatInput>();
+        }
     }
 
     private void FixedUpdate()
@@ -81,7 +69,7 @@ public class BoatMovement : MonoBehaviour
 
     private void UpdateRotation()
     {
-        _currentRotationSpeed += _moveInput.x * _rotationChangeSpeedMultiplier;
+        _currentRotationSpeed += _input.SteerBoat.x * _rotationChangeSpeedMultiplier;
         _currentRotationSpeed = Mathf.Clamp(
             _currentRotationSpeed,
             _minRotationSpeed,

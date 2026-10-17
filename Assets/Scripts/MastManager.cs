@@ -49,8 +49,7 @@ public class MastManager : MonoBehaviour
     [SerializeField]
     private List<WindConditionModifier> _windBoosts = new();
 
-    private InputActions _inputActions;
-    private Vector2 _moveInput;
+    private BoatInput _input;
     private float _currentYRotation;
     private float _currentYPosition;
     private float _currentSailStatus01 = 1f;
@@ -75,29 +74,17 @@ public class MastManager : MonoBehaviour
         private set;
     } = 1f;
 
+    private void Reset()
+    {
+        _input = GetComponentInParent<BoatInput>();
+    }
+
     private void Awake()
     {
-        _inputActions = new();
-
-        _inputActions.Player.SteerSail.performed +=
-            ctx => _moveInput = ctx.ReadValue<Vector2>();
-        _inputActions.Player.SteerSail.canceled +=
-            ctx => _moveInput = Vector2.zero;
-    }
-
-    private void OnEnable()
-    {
-        _inputActions.Player.Enable();
-    }
-
-    private void OnDisable()
-    {
-        _inputActions.Player.Disable();
-    }
-
-    private void OnDestroy()
-    {
-        _inputActions.Dispose();
+        if (_input == null)
+        {
+            _input = GetComponentInParent<BoatInput>();
+        }
     }
 
     private void Start()
@@ -182,7 +169,7 @@ public class MastManager : MonoBehaviour
 
     private void UpdateMastRotation()
     {
-        float rotationChange = _moveInput.x
+        float rotationChange = _input.SteerSail.x
             * _rotationSpeed
             * Time.fixedDeltaTime;
         _currentYRotation = Mathf.Clamp(
@@ -203,7 +190,7 @@ public class MastManager : MonoBehaviour
 
     private void UpdateLowerLogPosition()
     {
-        float positionChange = _moveInput.y
+        float positionChange = _input.SteerSail.y
             * _movementSpeed
             * Time.fixedDeltaTime;
         _currentYPosition = Mathf.Clamp(
