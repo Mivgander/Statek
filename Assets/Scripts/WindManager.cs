@@ -1,11 +1,22 @@
 using UnityEngine;
 
+/// <summary>
+/// Singleton that picks a new random wind direction at a
+/// fixed interval.
+/// </summary>
 public class WindManager : MonoBehaviour
 {
-    [SerializeField] private float windChangeRepeatRate = 10f;
+    [SerializeField]
+    private float _windChangeRepeatRate = 10f;
 
-    public Vector3 windDirection { get; private set; } = Vector3.zero;
+    /// <summary>
+    /// Gets the current wind direction on the XZ plane.
+    /// </summary>
+    public Vector3 WindDirection { get; private set; }
 
+    /// <summary>
+    /// Gets the active wind manager in the scene.
+    /// </summary>
     public static WindManager Instance { get; private set; }
 
     private void Awake()
@@ -13,6 +24,7 @@ public class WindManager : MonoBehaviour
         if (Instance != null)
         {
             Destroy(this);
+            return;
         }
 
         Instance = this;
@@ -20,12 +32,16 @@ public class WindManager : MonoBehaviour
 
     private void OnEnable()
     {
-        InvokeRepeating("GenerateRandomDirection", 0, windChangeRepeatRate);
+        InvokeRepeating(
+            nameof(GenerateRandomDirection),
+            0f,
+            _windChangeRepeatRate
+        );
     }
 
     private void OnDisable()
     {
-        CancelInvoke("GenerateRandomDirection");
+        CancelInvoke(nameof(GenerateRandomDirection));
     }
 
     private void GenerateRandomDirection()
@@ -33,6 +49,6 @@ public class WindManager : MonoBehaviour
         float x = Random.Range(-1f, 1f);
         float z = Random.Range(-1f, 1f);
 
-        windDirection = new Vector3(x, 0, z);
+        WindDirection = new(x, 0f, z);
     }
 }

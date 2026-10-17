@@ -1,50 +1,55 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
+/// <summary>
+/// Shows the current sail state in the HUD.
+/// </summary>
 public class UIManager : MonoBehaviour
 {
-    private PanelRenderer panelRenderer;
-    private Label sailOpenLabel;
-    private Label sailRotationLabel;
+    private PanelRenderer _panelRenderer;
+    private Label _sailOpenLabel;
+    private Label _sailRotationLabel;
 
     private void Awake()
     {
-        panelRenderer = GetComponent<PanelRenderer>();
+        _panelRenderer = GetComponent<PanelRenderer>();
     }
 
-    private void OnUIReloadedCallback(PanelRenderer panelRenderer, VisualElement rootElement, int version)
+    private void OnUIReloadedCallback(
+        PanelRenderer panelRenderer,
+        VisualElement rootElement,
+        int version)
     {
-        sailOpenLabel = rootElement.Q<Label>("SailOpenTextValue");
-        sailRotationLabel = rootElement.Q<Label>("SailRotationTextValue");
+        _sailOpenLabel = rootElement.Q<Label>("SailOpenTextValue");
+        _sailRotationLabel = rootElement.Q<Label>("SailRotationTextValue");
     }
 
     private void OnEnable()
     {
-        panelRenderer?.RegisterUIReloadCallback(OnUIReloadedCallback);
+        _panelRenderer?.RegisterUIReloadCallback(OnUIReloadedCallback);
 
-        GlobalEvents.OnSailHeightChange += OnSailHeightChange;
-        GlobalEvents.OnSailRotationChange += OnSailRotationChange;
+        GlobalEvents.SailHeightChanged += OnSailHeightChanged;
+        GlobalEvents.MastRotationChanged += OnSailRotationChanged;
     }
 
     private void OnDisable()
     {
-        panelRenderer?.UnregisterUIReloadCallback(OnUIReloadedCallback);
+        _panelRenderer?.UnregisterUIReloadCallback(
+            OnUIReloadedCallback);
 
-        GlobalEvents.OnSailHeightChange -= OnSailHeightChange;
-        GlobalEvents.OnSailRotationChange -= OnSailRotationChange;
+        GlobalEvents.SailHeightChanged -= OnSailHeightChanged;
+        GlobalEvents.MastRotationChanged -= OnSailRotationChanged;
     }
 
-    private void OnSailHeightChange(float newSailHeight01)
+    private void OnSailHeightChanged(float newHeight01)
     {
-        string value = Mathf.RoundToInt(newSailHeight01 * 100f).ToString();
-
-        sailOpenLabel.text = $"{value}%";
+        int percent = Mathf.RoundToInt(newHeight01 * 100f);
+        _sailOpenLabel.text = $"{percent}%";
     }
 
-    private void OnSailRotationChange(float newSailYRotation)
+    private void OnSailRotationChanged(float newYRotation)
     {
-        string value = Mathf.RoundToInt(newSailYRotation).ToString();
-
-        sailRotationLabel.text = $"{value}°";
+        int degrees = Mathf.RoundToInt(newYRotation);
+        _sailRotationLabel.text = $"{degrees}°";
     }
 }

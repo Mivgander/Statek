@@ -1399,7 +1399,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 178f28c63a645fb448b07b4be1f61909, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindManager
-  windChangeRepeatRate: 2000
+  _windChangeRepeatRate: 10
 --- !u!1 &1225200361
 GameObject:
   m_ObjectHideFlags: 0
@@ -1447,12 +1447,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d09080af584166468d5ec75cb06244a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoatMovement
-  maxMovementSpeed: 10
-  movementSpeedChangeMultiplier: 0.03
-  maxRotationSpeed: 30
-  minRotationSpeed: -30
-  rotationChangeSpeedMultiplier: 0.3
-  sail: {fileID: 1513937566}
+  _maxMovementSpeed: 10
+  _movementSpeedChangeMultiplier: 0.03
+  _maxRotationSpeed: 30
+  _minRotationSpeed: -30
+  _rotationChangeSpeedMultiplier: 0.3
+  _mast: {fileID: 1513937566}
 --- !u!1 &1436927671
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,7 +1930,7 @@ GameObject:
   - component: {fileID: 1513937565}
   - component: {fileID: 1513937566}
   m_Layer: 0
-  m_Name: Sail
+  m_Name: Mast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1964,48 +1964,35 @@ MonoBehaviour:
   m_GameObject: {fileID: 1513937564}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55e8f03585ba5f04ca70edd8a3635760, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a51059a9f28a064b8d6ef9ae5c42928, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SailMovement
-  rotationSpeed: 50
-  minAngle: -45
-  maxAngle: 45
-  cloth: {fileID: 1753156461}
-  maxClothXScale: 0.4
-  minClothXScale: 0.07
-  upperLog: {fileID: 1456662634}
-  lowerLog: {fileID: 883017344}
-  movementSpeed: 3
-  maxHeight: 6.8
-  minHeight: 3.4
-  windBoosts:
-  - windCondition: 0.9
-    speedModifier: 2
-  - windCondition: 0.7
-    speedModifier: 1.6
-  - windCondition: 0.3
-    speedModifier: 1.3
-  - windCondition: -0.3
-    speedModifier: 1
-  - windCondition: -0.7
-    speedModifier: 0.8
-  - windCondition: -0.9
-    speedModifier: 0.65
-  - windCondition: -1
-    speedModifier: 0.5
-  sailBoosts:
-  - sailDropValue: 0.1
-    speedModifier: 0
-  - sailDropValue: 0.3
-    speedModifier: 0.3
-  - sailDropValue: 0.5
-    speedModifier: 0.5
-  - sailDropValue: 0.7
-    speedModifier: 0.7
-  - sailDropValue: 0.85
-    speedModifier: 0.85
-  - sailDropValue: 1
-    speedModifier: 1
+  m_EditorClassIdentifier: Assembly-CSharp::MastManager
+  _rotationSpeed: 50
+  _minAngle: -45
+  _maxAngle: 45
+  _sail: {fileID: 1753156461}
+  _maxSailXScale: 0.4
+  _minSailXScale: 0.07
+  _upperLog: {fileID: 1456662634}
+  _lowerLog: {fileID: 883017344}
+  _movementSpeed: 3
+  _maxHeight: 6.8
+  _minHeight: 3.4
+  _windBoosts:
+  - MinWindDot: 0.9
+    SpeedModifier: 2
+  - MinWindDot: 0.7
+    SpeedModifier: 1.6
+  - MinWindDot: 0.3
+    SpeedModifier: 1.3
+  - MinWindDot: -0.3
+    SpeedModifier: 1
+  - MinWindDot: -0.7
+    SpeedModifier: 0.8
+  - MinWindDot: -0.9
+    SpeedModifier: 0.65
+  - MinWindDot: -1
+    SpeedModifier: 0.5
 --- !u!1 &1715647977
 GameObject:
   m_ObjectHideFlags: 0
@@ -2110,7 +2097,7 @@ GameObject:
   - component: {fileID: 1753156463}
   - component: {fileID: 1753156462}
   m_Layer: 0
-  m_Name: Cloth
+  m_Name: Sail
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2808,7 +2795,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6971ed3c3c814140b9a9ece9469f74d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WindIndicator
-  windImage: {fileID: 1715647978}
+  _windImage: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
