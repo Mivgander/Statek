@@ -225,6 +225,56 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 }
             ]
+        },
+        {
+            ""name"": ""Cursor"",
+            ""id"": ""485a6624-d454-4a6a-aa6d-e5c3563b899e"",
+            ""actions"": [
+                {
+                    ""name"": ""ReleaseCursor"",
+                    ""type"": ""Button"",
+                    ""id"": ""6e017dab-10b7-4774-91b7-b547ebd53767"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""LockCursor"",
+                    ""type"": ""Button"",
+                    ""id"": ""3fe5bc43-b300-4eea-ac9a-a3bb66843e01"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""ab86e796-2ca3-4385-912a-ef1af5c7531d"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ReleaseCursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9d80e694-31f9-4786-9f5e-e9a76e406805"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockCursor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -294,11 +344,16 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_SteerBoat = m_Player.FindAction("SteerBoat", throwIfNotFound: true);
         m_Player_SteerSail = m_Player.FindAction("SteerSail", throwIfNotFound: true);
+        // Cursor
+        m_Cursor = asset.FindActionMap("Cursor", throwIfNotFound: true);
+        m_Cursor_ReleaseCursor = m_Cursor.FindAction("ReleaseCursor", throwIfNotFound: true);
+        m_Cursor_LockCursor = m_Cursor.FindAction("LockCursor", throwIfNotFound: true);
     }
 
     ~@InputActions()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, InputActions.Player.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_Cursor.enabled, "This will cause a leak and performance issues, InputActions.Cursor.Disable() has not been called.");
     }
 
     /// <summary>
@@ -477,6 +532,113 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="PlayerActions" /> instance referencing this action map.
     /// </summary>
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Cursor
+    private readonly InputActionMap m_Cursor;
+    private List<ICursorActions> m_CursorActionsCallbackInterfaces = new List<ICursorActions>();
+    private readonly InputAction m_Cursor_ReleaseCursor;
+    private readonly InputAction m_Cursor_LockCursor;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "Cursor".
+    /// </summary>
+    public struct CursorActions
+    {
+        private @InputActions m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public CursorActions(@InputActions wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "Cursor/ReleaseCursor".
+        /// </summary>
+        public InputAction @ReleaseCursor => m_Wrapper.m_Cursor_ReleaseCursor;
+        /// <summary>
+        /// Provides access to the underlying input action "Cursor/LockCursor".
+        /// </summary>
+        public InputAction @LockCursor => m_Wrapper.m_Cursor_LockCursor;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_Cursor; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="CursorActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(CursorActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="CursorActions" />
+        public void AddCallbacks(ICursorActions instance)
+        {
+            if (instance == null || m_Wrapper.m_CursorActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_CursorActionsCallbackInterfaces.Add(instance);
+            @ReleaseCursor.started += instance.OnReleaseCursor;
+            @ReleaseCursor.performed += instance.OnReleaseCursor;
+            @ReleaseCursor.canceled += instance.OnReleaseCursor;
+            @LockCursor.started += instance.OnLockCursor;
+            @LockCursor.performed += instance.OnLockCursor;
+            @LockCursor.canceled += instance.OnLockCursor;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="CursorActions" />
+        private void UnregisterCallbacks(ICursorActions instance)
+        {
+            @ReleaseCursor.started -= instance.OnReleaseCursor;
+            @ReleaseCursor.performed -= instance.OnReleaseCursor;
+            @ReleaseCursor.canceled -= instance.OnReleaseCursor;
+            @LockCursor.started -= instance.OnLockCursor;
+            @LockCursor.performed -= instance.OnLockCursor;
+            @LockCursor.canceled -= instance.OnLockCursor;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="CursorActions.UnregisterCallbacks(ICursorActions)" />.
+        /// </summary>
+        /// <seealso cref="CursorActions.UnregisterCallbacks(ICursorActions)" />
+        public void RemoveCallbacks(ICursorActions instance)
+        {
+            if (m_Wrapper.m_CursorActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="CursorActions.AddCallbacks(ICursorActions)" />
+        /// <seealso cref="CursorActions.RemoveCallbacks(ICursorActions)" />
+        /// <seealso cref="CursorActions.UnregisterCallbacks(ICursorActions)" />
+        public void SetCallbacks(ICursorActions instance)
+        {
+            foreach (var item in m_Wrapper.m_CursorActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_CursorActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="CursorActions" /> instance referencing this action map.
+    /// </summary>
+    public CursorActions @Cursor => new CursorActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -563,5 +725,27 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSteerSail(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "Cursor" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="CursorActions.AddCallbacks(ICursorActions)" />
+    /// <seealso cref="CursorActions.RemoveCallbacks(ICursorActions)" />
+    public interface ICursorActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "ReleaseCursor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnReleaseCursor(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "LockCursor" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLockCursor(InputAction.CallbackContext context);
     }
 }

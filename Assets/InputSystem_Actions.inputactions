@@ -139,6 +139,54 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "Cursor",
+            "id": "485a6624-d454-4a6a-aa6d-e5c3563b899e",
+            "actions": [
+                {
+                    "name": "ReleaseCursor",
+                    "type": "Button",
+                    "id": "6e017dab-10b7-4774-91b7-b547ebd53767",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "LockCursor",
+                    "type": "Button",
+                    "id": "3fe5bc43-b300-4eea-ac9a-a3bb66843e01",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ab86e796-2ca3-4385-912a-ef1af5c7531d",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ReleaseCursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9d80e694-31f9-4786-9f5e-e9a76e406805",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "LockCursor",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [
