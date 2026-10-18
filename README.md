@@ -8,8 +8,8 @@ zmiennego wiatru oraz od stopnia otwarcia żagla.
 ## Możliwości
 
 - **Pływanie łodzią** – łódź płynie do przodu, a jej prędkość płynnie rośnie lub spada w zależności od wiatru i żagla.
-- **Skręcanie z bezwładnością** – wciaskanie klawiszy od skręcania stopniowo zwiększa prędkość
-  obrotu (jest limit), symulując obracanie sterem. Skręcając np. w prawo przez chwilę, po puszczeniu klawisza prędkośc obrotu zostaje i trzeba zacząć skręcać w lewo, aby wyzerować obrót i zacząć skręcać w drugą stronę.
+- **Skręcanie z bezwładnością** – wciskanie klawiszy od skręcania stopniowo zwiększa prędkość
+  obrotu (jest limit), symulując obracanie sterem. Skręcając np. w prawo przez chwilę, po puszczeniu klawisza prędkość obrotu zostaje i trzeba zacząć skręcać w lewo, aby wyzerować obrót i zacząć skręcać w drugą stronę.
 - **Obrót masztu** – maszt z żaglem obraca się w zakresie od -45° do 45°.
 - **Podnoszenie i opuszczanie żagla** – dolna reja przesuwa się w górę i w dół, a płótno
   żagla skaluje się razem z nią. Im bardziej rozwinięty żagiel, tym szybciej płynie łódź
@@ -33,3 +33,7 @@ zmiennego wiatru oraz od stopnia otwarcia żagla.
 | **S** | rozwijanie (opuszczanie) żagla |
 | **Esc** | odblokowanie i pokazanie kursora |
 | **Lewy przycisk myszy** | ponowne ukrycie i zablokowanie kursora |
+
+## Prezentacja
+
+Film z prezentacją projektu: [YouTube – Statek demo](https://youtu.be/30_lTUPMPx0)
