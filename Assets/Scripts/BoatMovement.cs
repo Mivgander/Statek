@@ -8,7 +8,7 @@ public class BoatMovement : MonoBehaviour
 {
     [Header("Movement Modifiers")]
     [SerializeField]
-    private float _maxMovementSpeed = 10f;
+    private float _baseMovementSpeed = 10f;
 
     [SerializeField]
     private float _movementSpeedChangeMultiplier = 0.2f;
@@ -54,7 +54,7 @@ public class BoatMovement : MonoBehaviour
 
     private void UpdatePosition()
     {
-        _currentMaxMovementSpeed = _maxMovementSpeed
+        _currentMaxMovementSpeed = _baseMovementSpeed
             * _mast.CurrentSailSpeedModifier
             * _mast.CurrentWindSpeedModifier;
         _currentMovementSpeed = Mathf.MoveTowards(
